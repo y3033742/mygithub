@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task"
+  xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
+  xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.3.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+  <!-- <import resource="classpath:springmvc/spring-email.xml" /> -->
+
+  <!-- 配置处理器映射器 -->
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+  </bean>
+
+  <!-- 配置处理器适配器 -->
+  <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+    <!-- 配置参数绑定相关 -->
+    <!-- <property name="webBindingInitializer" ref="webBindingInitializer" /> -->
+    <!-- 配置消息转换器 -->
+    <property name="messageConverters">
+      <list>
+        <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+          <property name="defaultCharset" value="UTF-8" />
+          <property name="writeAcceptCharset" value="false" />
+          <property name="supportedMediaTypes">
+            <list>
+              <value>text/xml</value>
+            </list>
+          </property>
+        </bean>
+
+        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+          <property name="defaultCharset" value="UTF-8" />
+          <property name="supportedMediaTypes">
+            <list>
+              <value>application/json</value>
+            </list>
+          </property>
+          <property name="objectMapper" ref="jsonMapper" />
+        </bean>
+        <ref bean="xml" />
+
+      </list>
+    </property>
+  </bean>
+  <bean id="xml" class="org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter">
+    <property name="defaultCharset" value="UTF-8" />
+    <property name="supportedMediaTypes">
+      <list>
+        <value>application/xml</value>
+      </list>
+    </property>
+    <property name="objectMapper" ref="xmlMapper" />
+  </bean>
+
+  <!-- 配置包扫描 -->
+  <context:component-scan base-package="com">
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service" />
+  </context:component-scan>
+
+  <!-- 配置逻辑视图解析器 -->
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <property name="prefix" value="/views/" />
+    <property name="suffix" value=".jsp" />
+  </bean>
+
+  <!-- 配置将对象转换为json时的规则 -->
+  <bean id="jsonMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
+    <property name="dateFormat" ref="dateFormat" />
+  </bean>
+  <!-- 配置将对象转换为xml时的规则 -->
+  <bean id="xmlMapper" class="com.common.jacksonconverter.MyXmlMapper">
+    <property name="propertyNamingStrategy" ref="propertyNamingStrategy" />
+    <property name="dateFormat" ref="dateFormat" />
+  </bean>
+  <!--配置 xmlMapper 自动过滤空字段 -->
+  <bean id="newUpdateXmlMapper" class="com.common.jacksonconverter.MyXmlMapper">
+    <property name="propertyNamingStrategy" ref="propertyNamingStrategy" />
+    <property name="dateFormat" ref="dateFormat" />
+    <property name="serializationInclusion" value="NON_EMPTY" />
+  </bean>
+
+  <!-- 配置时间格式转换器 -->
+  <bean id="dateFormat" class="java.text.SimpleDateFormat">
+    <constructor-arg name="pattern" type="java.lang.String" value="yyyy/M/d H:mm:ss" />
+  </bean>
+
+  <!-- 配置jackson对象转xml的属性转换规则 -->
+  <bean id="propertyNamingStrategy" class="com.common.jacksonconverter.MyPropertyNamingStrategy" />
+
+
+  <!-- 配置自定义参数转换器 -->
+  <!-- 字符串参数去前后空格 -->
+  <bean id="stringTrimConverter" class="com.common.typeconverter.in.StringTrimConverter" />
+  <!-- 特定格式时间字符串转换为java时间类型 -->
+  <bean id="stringToDateConverter" class="com.common.typeconverter.in.StringToDateConverter" />
+  <!-- 字符串转换为java Integer类型 -->
+  <bean id="stringToIntegerConverter" class="com.common.typeconverter.in.StringToIntegerConverter" />
+  <!-- 字符串转换为java Long类型 -->
+  <bean id="stringToLongConverter" class="com.common.typeconverter.in.StringToLongConverter" />
+
+  <!--配置 参数转换器服务 -->
+  <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+    <property name="converters">
+      <set>
+        <ref bean="stringTrimConverter" />
+        <ref bean="stringToDateConverter" />
+        <ref bean="stringToIntegerConverter" />
+        <ref bean="stringToLongConverter" />
+      </set>
+    </property>
+  </bean>
+
+  <!-- 配置参数验证的文本文件 -->
+  <!-- <bean id="validationMessageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+    <property name="basenames"> <list> <value>classpath:validation/validationMessageSource</value> </list> </property> <property
+    name="cacheSeconds" value="600" /> <property name="fileEncodings" value="GBK" /> </bean> -->
+
+  <!-- <bean id="traversableResolver" class="com.common.customevalidator.MyResolver"> </bean> -->
+
+  <!-- 配置参数验证器，使用hibernate-validator -->
+  <!--<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"> <property name="providerClass"
+    value="org.hibernate.validator.HibernateValidator" /> <property name="validationMessageSource" ref="validationMessageSource"
+    /> <property name="traversableResolver" ref="traversableResolver" /> <property name="validationProperties"> <props> <prop
+    key="hibernate.validator.fail_fast">true</prop> </props> </property> </bean> -->
+
+  <!-- 配置MVC参数绑定初始化器，包含参数类型转化和参数验证器 -->
+  <!-- <bean id="webBindingInitializer" class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer"> <property
+    name="conversionService" ref="conversionService" /> <property name="validator" ref="validator" /> </bean> -->
+
+  <!-- 使用spring的时间调度器 -->
+  <task:annotation-driven executor="myExecutor" scheduler="myScheduler" />
+  <task:executor id="myExecutor" pool-size="5" />
+  <task:scheduler id="myScheduler" pool-size="5" />
+
+</beans>

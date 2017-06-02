@@ -1,0 +1,92 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>bigsite.core</artifactId>
+  <packaging>jar</packaging>
+  <name>bigsite.core</name>
+
+  <parent>
+    <groupId>com.fang</groupId>
+    <artifactId>bigsite</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+
+  <dependencies>
+    <!-- java单元测试包 -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+
+    <!-- spring IOC扩展包，依赖了spring-core、spring-beans、spring-expression、spring-aop包,spring-core依赖了commons-logging包 -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+
+    <!-- spring支持单元测试的包 -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+    </dependency>
+
+    <!-- spring支持aspectj静态织入 ,依赖包aspectjweaver包 -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-aspects</artifactId>
+    </dependency>
+
+    <!-- 数据库驱动 (mysql) -->
+    <!-- <dependency> <groupId>mysql</groupId> <artifactId>mysql-connector-java</artifactId> </dependency> -->
+
+    <!-- 数据库驱动（sqlserver） -->
+    <dependency>
+      <groupId>net.sourceforge.jtds</groupId>
+      <artifactId>jtds</artifactId>
+    </dependency>
+
+    <!-- 数据库 连接池(druid) -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+    </dependency>
+
+    <!-- 数据库 连接池(c3p0) -->
+    <!-- <dependency> <groupId>c3p0</groupId> <artifactId>c3p0</artifactId> </dependency> -->
+
+    <!-- 持久层框架-hibernate -->
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+    </dependency>
+
+    <!-- spring orm整合包，依赖spring-jdbc、spring-tx包 -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-orm</artifactId>
+    </dependency>
+
+    <!-- 持久层框架-mybatis -->
+    <!-- <dependency> <groupId>org.mybatis</groupId> <artifactId>mybatis</artifactId> </dependency> <dependency> <groupId>org.mybatis</groupId>
+      <artifactId>mybatis-spring</artifactId> </dependency> -->
+
+    <!-- RSA加密 -->
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk16</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <finalName>bigsite.core</finalName>
+  </build>
+</project>

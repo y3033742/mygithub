@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>bigsite.portal</artifactId>
+  <packaging>war</packaging>
+
+  <parent>
+    <groupId>com.fang</groupId>
+    <artifactId>bigsite</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <dependencies>
+
+
+    <!-- https://mvnrepository.com/artifact/jstl/jstl -->
+    <dependency>
+      <groupId>jstl</groupId>
+      <artifactId>jstl</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fang</groupId>
+      <artifactId>bigsite.core</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+  </dependencies>
+  <build>
+    <finalName>v.portal</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <configuration>
+          <warName>${project.artifactId}</warName>
+          <webResources>
+            <resource>
+              <filtering>true</filtering>
+              <directory>src/main/webapp</directory>
+              <includes>
+                <include>**/web.xml</include>
+              </includes>
+            </resource>
+          </webResources>
+          <warSourceDirectory>src/main/webapp</warSourceDirectory>
+          <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
